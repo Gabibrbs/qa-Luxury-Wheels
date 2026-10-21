@@ -1,0 +1,30 @@
+name: Testes
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      # Este repositório (os testes)
+      - uses: actions/checkout@v4
+        with:
+          path: qa-luxury-wheels
+      # O projeto a testar, numa pasta ao lado (onde o conftest.py o procura)
+      - uses: actions/checkout@v4
+        with:
+          repository: Gabibrbs/luxury-wheels
+          path: luxury-wheels
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r qa-luxury-wheels/requirements.txt
+      - run: python -m pytest --html=relatorio.html --self-contained-html
+        working-directory: qa-luxury-wheels
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: relatorio-de-testes
+          path: qa-luxury-wheels/relatorio.html
