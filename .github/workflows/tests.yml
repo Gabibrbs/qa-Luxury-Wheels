@@ -9,15 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # This repository (the tests)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           path: qa-luxury-wheels
       # The project under test, in a folder next to it (where conftest.py looks for it)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: Gabibrbs/luxury-wheels
           path: luxury-wheels
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - run: pip install -r qa-luxury-wheels/requirements.txt
@@ -25,7 +25,7 @@ jobs:
       - run: python -m playwright install --with-deps chromium
       - run: python -m pytest --html=report.html --self-contained-html
         working-directory: qa-luxury-wheels
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: test-report
