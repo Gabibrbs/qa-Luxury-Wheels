@@ -2,7 +2,7 @@
 
 import pytest
 
-from conftest import query_sql
+from sql_helpers import query_sql
 
 pytestmark = pytest.mark.web
 

@@ -35,6 +35,7 @@ sys.path.insert(0, str(PROJECT_PATH))
 
 import database  # noqa: E402  (must come after the sys.path change)
 from app import aplicacao  # noqa: E402
+from sql_helpers import run_sql  # noqa: E402
 
 
 @pytest.fixture
@@ -48,25 +49,6 @@ def client(tmp_path, monkeypatch):
     database.inicializar_base_dados()
     aplicacao.config["TESTING"] = True
     return aplicacao.test_client()
-
-
-def run_sql(statement, parameters=()):
-    """Runs a change (INSERT/UPDATE/DELETE) on the test database."""
-    connection = database.obter_ligacao()
-    try:
-        connection.execute(statement, parameters)
-        connection.commit()
-    finally:
-        connection.close()
-
-
-def query_sql(statement, parameters=()):
-    """Runs a SELECT on the test database and returns all the rows."""
-    connection = database.obter_ligacao()
-    try:
-        return connection.execute(statement, parameters).fetchall()
-    finally:
-        connection.close()
 
 
 @pytest.fixture

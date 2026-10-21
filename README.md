@@ -2,14 +2,16 @@
 
 **Português** | [English](#english)
 
-Testes automáticos em **Python + pytest** para o website [Luxury Wheels](https://github.com/Gabibrbs/luxury-wheels),
+Testes automáticos em **Python + pytest + Playwright** para o website [Luxury Wheels](https://github.com/Gabibrbs/luxury-wheels),
 um site de aluguer de carros e motos feito com Flask e SQLite como projeto final do curso de Programação Python.
 Autor: Gabriel Barbosa.
 
 ## O que contém
 
-- **128 casos de teste:** regras de datas e preços, validação de formulários, páginas, pesquisa e filtros,
-  registo e início de sessão, incluindo testes de valores-limite, negativos e de segurança.
+- **134 casos de teste:** 128 testes rápidos (regras de datas e preços, validação de formulários, páginas,
+  pesquisa e filtros, registo e início de sessão, incluindo valores-limite, testes negativos e de segurança)
+  e 6 testes de interface com **Playwright**, que abrem o site num browser real (registo, pesquisa, reserva,
+  pagamento e cancelamento).
 - **Testes independentes:** cada teste corre numa base de dados temporária própria.
 - **Plano de testes:** as técnicas e a cobertura estão descritas em [`docs/test_plan.md`](docs/test_plan.md).
 - **Integração contínua:** os testes correm no GitHub Actions a cada *push*.
@@ -31,8 +33,13 @@ Depois, dentro de `qa-luxury-wheels`:
 
 ```
 pip install -r requirements.txt
+python -m playwright install chromium
 python -m pytest
 ```
+
+O segundo comando descarrega o browser usado pelos testes de interface (só é preciso uma vez).
+Para correr só os testes rápidos, sem browser: `python -m pytest -m "not e2e"`.
+Para ver o browser a trabalhar: `python -m pytest tests/e2e --headed --slowmo 500`.
 
 Para gerar um relatório HTML:
 
@@ -46,6 +53,9 @@ Se o projeto estiver noutra pasta, define a variável de ambiente `LUXURY_WHEELS
 
 ```
 tests/conftest.py                 fixtures partilhadas (base de dados temporária, veículos de teste, dados de registo)
+tests/sql_helpers.py              funções para ler e alterar a base de dados de teste
+tests/e2e/conftest.py             arranca o site para os testes de browser (servidor e base de dados temporários)
+tests/e2e/test_user_journeys.py   percursos do cliente no browser (Playwright)
 tests/test_dates.py               datas e regras de reserva
 tests/test_prices.py              resumo e preço da reserva
 tests/test_validations.py         utilizador, e-mail, password e cartão
@@ -58,14 +68,15 @@ docs/test_plan.md                 plano de testes
 
 ## English
 
-Automated tests in **Python + pytest** for the [Luxury Wheels](https://github.com/Gabibrbs/luxury-wheels)
+Automated tests in **Python + pytest + Playwright** for the [Luxury Wheels](https://github.com/Gabibrbs/luxury-wheels)
 website, a car and motorbike rental site built with Flask and SQLite as the final project of a Python
 programming course. Author: Gabriel Barbosa.
 
 ### What it contains
 
-- **128 test cases:** date and price rules, form validation, pages, search and filters, sign-up and login,
-  including boundary-value, negative and security tests.
+- **134 test cases:** 128 fast tests (date and price rules, form validation, pages, search and filters,
+  sign-up and login, including boundary-value, negative and security tests) and 6 UI tests with
+  **Playwright** that open the site in a real browser (sign-up, search, booking, payment and cancellation).
 - **Independent tests:** every test runs on its own temporary database.
 - **Test plan:** techniques and coverage are described in [`docs/test_plan.md`](docs/test_plan.md).
 - **Continuous integration:** the tests run on GitHub Actions on every push.
@@ -87,8 +98,13 @@ Then, inside `qa-luxury-wheels`:
 
 ```
 pip install -r requirements.txt
+python -m playwright install chromium
 python -m pytest
 ```
+
+The second command downloads the browser used by the UI tests (needed only once).
+To run only the fast tests, without a browser: `python -m pytest -m "not e2e"`.
+To watch the browser work: `python -m pytest tests/e2e --headed --slowmo 500`.
 
 To generate an HTML report:
 
@@ -102,6 +118,9 @@ If the project is in another folder, set the `LUXURY_WHEELS_PATH` environment va
 
 ```
 tests/conftest.py                 shared fixtures (temporary database, test vehicles, sign-up data)
+tests/sql_helpers.py              functions to read and change the test database
+tests/e2e/conftest.py             starts the site for the browser tests (temporary server and database)
+tests/e2e/test_user_journeys.py   customer journeys in the browser (Playwright)
 tests/test_dates.py               dates and booking rules
 tests/test_prices.py              booking summary and price
 tests/test_validations.py         username, e-mail, password and card
